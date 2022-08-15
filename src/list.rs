@@ -11,6 +11,10 @@ pub struct ListIter<'a, T> {
     node: Option<&'a ListNode<T>>
 }
 
+pub struct ListIterMut<'a, T> {
+    node: Option<&'a mut ListNode<T>>
+}
+
 impl <T> List<T> {
     pub fn new() -> Self {
 	Self {
@@ -113,8 +117,16 @@ impl <T> List<T> {
 
     pub fn front(&self) -> Option<&T> {
 	unsafe {
-	    Option::from(self.head).map(|head| {
-		&((*head).value)
+	    self.head.as_ref().map(|head| {
+		&head.value
+	    })
+	}
+    }
+
+    pub fn front_mut(&mut self) -> Option<&mut T> {
+	unsafe {
+	    self.head.as_mut().map(|head| {
+		&mut head.value
 	    })
 	}
     }
@@ -126,15 +138,35 @@ impl <T> List<T> {
 	    }
 	}
     }
+
+    pub fn iter_mut(&mut self) -> ListIterMut<'_, T> {
+	unsafe {
+	    ListIterMut {
+		node: self.head.as_mut()
+	    }
+	}
+    }
 }
 
 impl <'a, T> Iterator for ListIter<'a, T> {
     type Item = &'a T;
     fn next(&mut self) -> Option<Self::Item> {
 	unsafe {
-            self.node.map(|node| {
+            self.node.take().map(|node| {
 		self.node = node.next.as_ref();
 		&node.value
+	    })
+	}
+    }
+}
+
+impl <'a, T> Iterator for ListIterMut<'a, T> {
+    type Item = &'a mut T;
+    fn next(&mut self) -> Option<Self::Item> {
+        unsafe {
+	    self.node.take().map(|node| {
+		self.node = node.next.as_mut();
+		&mut node.value
 	    })
 	}
     }
