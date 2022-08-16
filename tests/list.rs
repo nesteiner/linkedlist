@@ -1,47 +1,50 @@
-use list::list::List;
+use linkedlist::{List, Queue, Stack};
+use linkedlist::ListOperation;
+
+// #[test]
+// fn test_list() {
+//     let mut list = List::new();
+//     for i in 1..=10 {
+// 	list.push(i);
+//     }
+
+//     for i in list.iter() {
+// 	println!("{}", i);
+//     }
+// }
 
 #[test]
-fn test_list() {
-    let mut list = List::new();
-    for i in 1..=9 {
-	list.pushback(i);
+fn test_queue() {
+    let mut queue = Queue::new();
+    for i in 1..=10 {
+	queue.push(i);
     }
 
-    for i in list.iter() {
+    for i in queue.iter() {
 	println!("{}", i);
     }
 
-    for i in 10..=19 {
-	list.pushfront(i);
+    while !queue.isempty() {
+	println!("{}", queue.front().unwrap());
+	queue.pop();
     }
 
-    for i in list.iter() {
-	println!("{}", i);
-    }
-
-    assert_eq!(list.popfront(), Some(19));
-    assert_eq!(list.popfront(), Some(18));
-
-    for i in list.iter_mut() {
-	*i *= 2;
-    }
-
-    for i in list.iter() {
-	println!("{}", i);
-    }
-
+    assert_eq!(queue.pop(), None);
 }
 
 #[test]
-fn test_advancefunc() {
-    let mut list = List::new();
-    for i in 1..=9 {
-	list.pushback(i);
+fn test_stack() {
+    let mut stack = Stack::new();
+    for i in 1..=10 {
+	stack.push(i);
     }
 
-    println!("{}", list.iter().fold(0, |r, x| r + x));
-
-    for i in list.iter().map(|x| x * 2) {
+    for i in stack.iter() {
 	println!("{}", i);
+    }
+
+    while !stack.isempty() {
+	println!("{}", stack.top().unwrap());
+	stack.pop();
     }
 }
